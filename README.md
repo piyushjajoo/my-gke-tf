@@ -273,7 +273,7 @@ aws s3api create-bucket --bucket "your-bucket-name" --region "your-aws-region"
 2. If you are seeing following error while executing `gcloud` command, you might need to install the correct version of python.
 
 ```
-pjajoo-rmbp16:my-gke-tf piyush.jajoo$ gcloud auth application-default login
+$ gcloud auth application-default login
 ERROR: gcloud failed to load: module 'collections' has no attribute 'Mapping'
     gcloud_main = _import_gcloud_main()
     import googlecloudsdk.gcloud_main
