@@ -1,6 +1,6 @@
 variable "cluster_name" {
   type        = string
-  description = "resource group, vnet, subnet and aks cluster name"
+  description = "vpc, subnet and gke cluster name"
 }
 
 variable "k8s_version" {
@@ -11,7 +11,7 @@ variable "k8s_version" {
 
 variable "region" {
   type        = string
-  description = "azure region where the aks cluster must be created, this region should match where you have created the resource group, vnet and subnet"
+  description = "gcp region where the gke cluster must be created, this region should match where you have created the vpc and subnet"
 }
 
 variable "cidrBlock" {
