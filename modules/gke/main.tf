@@ -13,9 +13,8 @@ locals {
   zones = slice(data.google_compute_zones.available.names, 0, 3)
 
   # we only care about compute and container service here hence only enabling these project services
-  services = toset([
-    "compute",
-  "container"])
+  # without cloudresourcemanager we get errors
+  services = toset(["compute", "container", "cloudresourcemanager"])
 
   # we will pick the latest k8s version
   master_version = data.google_container_engine_versions.main.valid_master_versions[0]
@@ -92,7 +91,7 @@ resource "google_container_node_pool" "nodepools" {
 
   node_config {
     machine_type = each.value.machine_type
-    labels       = each.value.labels
+    labels       = each.value.node_labels
   }
 
   lifecycle {
@@ -100,7 +99,6 @@ resource "google_container_node_pool" "nodepools" {
       initial_node_count,
       node_count,
       node_config,
-      instance_group_urls,
       node_locations
     ]
   }

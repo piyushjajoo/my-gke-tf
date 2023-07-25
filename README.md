@@ -72,7 +72,13 @@ In [outputs.tf](./outputs.tf) tf file you will see declaration of any output var
 
 Execute all the commands below from `my-gke-tf` root where the above explained files are -
 
-1. Make sure [gcloud cli](https://cloud.google.com/sdk/docs/install) is installed and configured to talk to the gcloud account. 
+1. Create [GCP Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects) and note the `Project ID` as we will need it below.
+
+
+2. Terraform needs permissions to interact with the GCP API. This is accomplished by creating a service account. In the GCP console, navigate to `IAM & Admin > Service Accounts > Create Service Account`, provide a name, and grant it the `Kubernetes Engine Admin` and `Service Account User` roles. Next, create a JSON key for this service account and download it. Keep this file safe and secure, as it provides administrative access to your GCP project. We will need this file below.
+
+
+3. Make sure [gcloud cli](https://cloud.google.com/sdk/docs/install) is installed and configured to talk to the gcloud account. 
 
 ```shell
 gcloud auth application-default login
@@ -81,10 +87,8 @@ gcloud auth application-default login
 2. Set the environment variables below -
 
 ```shell
-export ARM_CLIENT_ID="The Client ID which should be used."
-export ARM_CLIENT_SECRET="The Client Secret which should be used."
-export ARM_SUBSCRIPTION_ID="The Subscription ID which should be used."
-export ARM_TENANT_ID="The Tenant ID which should be used."
+export GOOGLE_CREDENTIALS="path/to/service/account/credentials/JSON from #2 above"
+export GOOGLE_PROJECT="GCP Project ID from #1 above"
 ```
 
 2. Make sure the s3 bucket to store the tfstate file exists, if not please create. Following is an example how you can use aws cli to create the s3 bucket.
@@ -136,7 +140,12 @@ In this section we will show how to connect to aks cluster and install `nginx` h
 1. Retrieve kubeconfig using gcloud cli, assuming you have configured the gcloud cli properly to point to the gcp account which has the gke cluster. Please see [gcloud cli documentation](https://cloud.google.com/sdk/docs/install) for configuration details.
 
 ```shell
+gcloud auth login
+gcloud container clusters get-credentials CLUSTER_NAME --zone ZONE_OR_REGION --project PROJECT_ID
 
+# example
+gcloud auth login
+gcloud container clusters get-credentials "platformwale" --zone "us-east1" --project "${GOOGLE_PROJECT}"
 ```
 
 2. You can check if you are pointing to the right kubernetes cluster by running following kubectl command
@@ -156,7 +165,7 @@ helm install -n default nginx bitnami/nginx
 
 ```shell
 kubectl get pods -n default
-kubectl get svc -n default
+kubectl get svc -n default nginx
 ```
 ```
 # example
@@ -165,8 +174,8 @@ NAME                     READY   STATUS    RESTARTS   AGE
 nginx-7c8ff57685-ck9pn   1/1     Running   0          3m31s
 
 $ kubectl get svc -n default nginx
-NAME    TYPE           CLUSTER-IP   EXTERNAL-IP    PORT(S)        AGE
-nginx   LoadBalancer   10.0.80.50   XX.XXX.XXX.X   80:30149/TCP   77s
+NAME    TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)        AGE
+nginx   LoadBalancer   10.19.255.56   XX.XXX.XXX.XXX   80:32142/TCP   76s
 ```
 
 ![Welcome to nginx!!](./images/welcome-to-nginx.png)
@@ -191,6 +200,8 @@ Error from server (NotFound): services "nginx" not found
 ```shell
 terraform destroy -var-file="sample.tfvars"
 ```
+
+3. Delete the service account and GCP project created earlier from GCP console.
 
 ## Terraform Documentation
 
