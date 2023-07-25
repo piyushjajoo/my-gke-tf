@@ -34,10 +34,10 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cidrBlock"></a> [cidrBlock](#input\_cidrBlock) | The cidr block for subnet | `string` | `"10.1.0.0/16"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | resource group, vnet, subnet and aks cluster name | `string` | n/a | yes |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | vpc, subnet and gke cluster name | `string` | n/a | yes |
 | <a name="input_k8s_version"></a> [k8s\_version](#input\_k8s\_version) | kubernetes version | `string` | `"1.27"` | no |
 | <a name="input_nodepools"></a> [nodepools](#input\_nodepools) | Nodepools for the Kubernetes cluster | <pre>map(object({<br>    name         = string<br>    node_count   = number<br>    node_labels  = map(any)<br>    machine_type = string<br>  }))</pre> | <pre>{<br>  "worker": {<br>    "machine_type": "n1-standard-1",<br>    "name": "worker",<br>    "node_count": 1,<br>    "node_labels": {<br>      "worker-name": "worker"<br>    }<br>  }<br>}</pre> | no |
-| <a name="input_region"></a> [region](#input\_region) | azure region where the aks cluster must be created, this region should match where you have created the resource group, vnet and subnet | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | gcp region where the gke cluster must be created, this region should match where you have created the vpc and subnet | `string` | n/a | yes |
 
 ## Outputs
 
