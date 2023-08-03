@@ -203,6 +203,18 @@ terraform destroy -var-file="sample.tfvars"
 
 3. Delete the service account and GCP project created earlier from GCP console.
 
+4. Delete the s3 bucket created to store tfstate
+
+```shell
+
+# empty the bucket
+aws s3 rm s3://<your-bucket-name> --recursive
+
+# delete the bucket
+aws s3api delete-bucket --bucket "your-bucket-name" --region "your-aws-region"
+
+```
+
 ## Terraform Documentation
 
 ### Requirements
